@@ -33,6 +33,8 @@ nodemon - Instead of running node \<app name>, run nodemon for automatic server 
 
 \* - Splat route matcher will act as a catch-all for requests that are sent to routes that have not been defined. Useful if you want an error page that will display to a user if they try to access a route that is not defined. NB - If the splat route matcher comes first in the list of routes, no other routes will be accessible; route order is very important.
 
+<br>
+
 ### Route Order
 
 When a get request is sent, express will evaluate all possible routes in the order they are defined in the main app.js file. Once a match is found, that is the code that will be executed.
@@ -49,6 +51,8 @@ app.get('/r/:subredditName/comments/:id/:title/' function(req, res) {
 ```
 
 The req (request) argument will be an object containing all of the data passed in with the request. req.params will return a list of all of the params entered via the query string.
+
+<br>
 
 ## View Templates & EJS
 
@@ -76,19 +80,71 @@ app.get('/fallinlovewith/:thing', function(req, res) {
 	res.render('love.ejs', { thingVar: thing });
 });
 ```
+<br>
 
 Express uses [ejs](https://ejs.co/#docs) embedded javascript templates, just like how Rails uses embedded ruby erb templates. 
 
 >Note that we need to install ejs independently using npm install ejs --save.
 
-Ejs uses the following tags:
 
->* <% 'Scriptlet' tag, for control-flow, no output
->* <%_ ‘Whitespace Slurping’ Scriptlet tag, strips all whitespace before it
->* <%= Outputs the value into the template (HTML escaped)
->* <%- Outputs the unescaped value into the template
->* <%# Comment tag, no execution, no output
->* <%% Outputs a literal '<%'
->* %> Plain ending tag
->* -%> Trim-mode ('newline slurp') tag, trims following newline
->* _%> ‘Whitespace Slurping’ ending tag, removes all whitespace after it
+><%= %> - Renders the value of the returned JS to the page as HTML.
+>
+><% %> - Runs the code without printing to the page.
+
+<br>
+
+To tell express that we want to use EJS ahead of time, include the following in the app.js file:
+
+```javascript
+app.set('view engine', 'ejs')
+```
+
+This will save us from having to specify .ejs when setting up our routes.
+
+```javascript
+app.get('/', function(req, res) {
+    res.render('home'); //no longer need to specify .ejs extension
+});
+```
+
+---
+
+## Styles & Partials
+
+>NB - CSS files are conventionally kept in the /public directory. By default, express only serves files from the /views directory. To tell express to serve the contents of another directory, include the following within the app.js file:
+
+```javascript
+//argument refers to the directory we want access to
+app.use(express.static('public'));
+```
+
+Partials are template files that we can include in other templates to keep code DRY. They are conventionally kept in /views/partials. Typically we want two partial files to contain our HTML boilerplate like so:
+
+```html
+<!-- header.ejs -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+        <link rel="stylesheet" href="/app.css">
+    </head>
+    <body>
+
+    <!-- Note we are using /app.css and not just app.css. If we omit the /, express will look for the stylesheet in the same directory as the view and it will not be able to find it -->
+```
+
+```html
+<!-- footer.ejs -->
+    </body>
+</html>
+```
+
+To include partials in a view:
+
+```html
+<%- include('partials/header') %>
+
+<!-- HTML CONTENT -->
+
+<%- include('partials/footer')%>
+```
