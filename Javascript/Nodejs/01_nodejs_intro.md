@@ -1,4 +1,4 @@
-# [Node.js](https://nodejs.org/en/docs/)
+# [Node.js](https://nodejs.org/en/docs/) & [Express](https://expressjs.com/)
 
 ## Basic Shell Commands
 * node - Starts the node REPL.
@@ -148,3 +148,22 @@ To include partials in a view:
 
 <%- include('partials/footer')%>
 ```
+
+## Post Requests
+
+```javascript
+app.post('/friends', function(req, res) {
+    //req.body is an object containing the body of the request form
+    console.log(req.body); 
+})
+```
+
+Without the package body-parser, req.body would be undefined. Body-parser is included as a dependency in express 4.16+. It needs to be required in app.js:
+
+```javascript
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+```
+
+The [redirect](http://expressjs.com/en/5x/api.html#res.redirect) keyword can be used in place of send or render. It redirects to the URL derived from the specified path, with specified status, a positive integer that corresponds to an HTTP status code . If not specified, status defaults to “302 “Found”.
