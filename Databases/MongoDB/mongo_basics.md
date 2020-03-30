@@ -48,6 +48,10 @@ etc...
 
     >NOTE - .limit() will limit the number of matching objects to be destroyed. Ex. db.dogs.remove({breed: "Poodle"}).limit(1) will remove only the first matching object
 
+* db.collection.drop() - Drops the specified collection from the DB.
+
+> db.dogs.drop() removes the entire dogs collection.
+
 ---
 
 ## [Mongoose](https://mongoosejs.com/)
@@ -63,7 +67,7 @@ const mongoose = require('mongoose');
 const db = require('./config/keys').mongoURI;
 ```
 
-To connect Mongoose to the DB, we need to explicitly do so in app.js using the connect keyword. connect() takes two arguments: the first is the mongoURI and the second is a configuration object. Connect returns a promise.
+To connect Mongoose to the DB, we need to explicitly do so in app.js using the connect keyword. connect() takes two arguments: the first is the mongoURI and the second is a configuration object. Connect returns a promise. [useUnifiedTopology and useNewUrlParser must both be present and set to true to avoid deprecation errors.](https://mongoosejs.com/docs/deprecations.html)
 
 ```javascript
 mongoose
